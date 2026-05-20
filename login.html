@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookVault | Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Redirect if already logged in
+        if (localStorage.getItem('bookvault_logged_in') === 'true') {
+            window.location.replace('index.html');
+        }
+    </script>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- Floating background shapes -->
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-book-open"></i> BookVault
+                </div>
+                <p class="login-subtitle">Your personal digital reading sanctuary</p>
+            </div>
+
+            <!-- Prefilled demo credentials block -->
+            <div class="demo-credentials">
+                <div><i class="fas fa-info-circle" style="color: var(--primary-color); margin-right: 0.5rem;"></i><strong>Demo Account Credentials</strong></div>
+                <div style="margin-top: 0.25rem; font-size: 0.8rem; opacity: 0.9;">
+                    Email: <code>aarav.sharma@bookvault.in</code><br>
+                    Password: <code>password123</code>
+                </div>
+            </div>
+
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" value="aarav.sharma@bookvault.in" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-control" id="password" value="password123" required>
+                </div>
+
+                <div id="error-message" style="color: var(--danger-color); font-size: 0.85rem; margin-bottom: 1rem; display: none;">
+                    <i class="fas fa-exclamation-circle"></i> Invalid email or password.
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Sign In <i class="fas fa-sign-in-alt"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Synchronize theme state
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        // Form submission handling
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('email').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-message');
+
+            // Simple validation for Aarav Sharma demo credentials
+            if (emailInput === 'aarav.sharma@bookvault.in' && passwordInput === 'password123') {
+                localStorage.setItem('bookvault_logged_in', 'true');
+                window.location.replace('index.html');
+            } else {
+                errorMsg.style.display = 'block';
+                // Add a small shake animation to the card for interactive polish
+                const card = document.querySelector('.login-card');
+                card.style.animation = 'none';
+                card.offsetHeight; // trigger reflow
+                card.style.animation = 'shake 0.3s ease-in-out';
+            }
+        });
+
+        // Add shake keyframe style programmatically
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-6px); }
+                75% { transform: translateX(6px); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
