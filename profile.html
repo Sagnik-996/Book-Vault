@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // Authentication Guard
+        if (localStorage.getItem('bookvault_logged_in') !== 'true') {
+            window.location.replace('login.html');
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookVault | My Profile</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar glass" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-book-open"></i> BookVault
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item"><a href="index.html"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="library.html"><i class="fas fa-bookmark"></i> My Library</a></li>
+            <li class="nav-item"><a href="profile.html" class="active"><i class="fas fa-user-circle"></i> My Profile</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="icon-btn menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+                <h1 style="font-size: 1.5rem;">My Profile</h1>
+            </div>
+            <div class="topbar-actions">
+                <button class="icon-btn" id="theme-toggle"><i class="fas fa-moon"></i></button>
+                <a href="profile.html" class="profile-widget active" id="profile-widget" style="text-decoration: none;">
+                    <img src="images/user_avatar.png" alt="Aarav Sharma" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name">Aarav Sharma</span>
+                        <span class="profile-role">Premium Member</span>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <!-- Profile Container -->
+        <div class="profile-container">
+            
+            <!-- Left Side Card: Overview -->
+            <div class="profile-card glass">
+                <div class="profile-card-avatar-wrapper">
+                    <img src="images/user_avatar.png" alt="Aarav Sharma" class="profile-card-avatar">
+                </div>
+                <h2 class="profile-card-name" id="display-name">Aarav Sharma</h2>
+                <p class="profile-card-email" id="display-email">aarav.sharma@bookvault.in</p>
+                <span class="profile-badge">Premium Member</span>
+
+                <!-- Quick Stats / Meta Info -->
+                <div class="profile-meta-info">
+                    <div class="profile-meta-row">
+                        <span class="profile-meta-label">Member Since</span>
+                        <span class="profile-meta-value">May 20, 2026</span>
+                    </div>
+                    <div class="profile-meta-row">
+                        <span class="profile-meta-label">Favorite Genre</span>
+                        <span class="profile-meta-value" id="meta-fav-genre">Mythology</span>
+                    </div>
+                    <div class="profile-meta-row">
+                        <span class="profile-meta-label">Total Books</span>
+                        <span class="profile-meta-value" id="meta-total-books">23</span>
+                    </div>
+                </div>
+
+                <!-- Navigation List (repeating dropdown items) -->
+                <div class="profile-actions-list">
+                    <a href="index.html" class="profile-action-card-item">
+                        <i class="fas fa-chart-line"></i> Reading Stats
+                    </a>
+                    <a href="library.html" class="profile-action-card-item">
+                        <i class="fas fa-book-reader"></i> My Library
+                    </a>
+                    <div class="profile-action-card-item danger-action" id="profile-logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Card: Settings -->
+            <div class="kpi-card glass" style="flex-direction: column; align-items: stretch; gap: 1.5rem; padding: 2.5rem 2rem;">
+                <h2 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">
+                    <i class="fas fa-cog" style="color: var(--primary-color); margin-right: 0.5rem;"></i> Account Settings
+                </h2>
+                
+                <form id="profile-settings-form">
+                    <div class="profile-form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="profile-name-input">Full Name</label>
+                            <input type="text" class="form-control" id="profile-name-input" value="Aarav Sharma" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="profile-email-input">Email Address</label>
+                            <input type="email" class="form-control" id="profile-email-input" value="aarav.sharma@bookvault.in" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.25rem;">
+                        <label class="form-label" for="profile-bio-input">Bio</label>
+                        <textarea class="form-control" id="profile-bio-input" rows="4" style="resize: none; font-family: inherit;">Avid book reader and software developer. Love reading historical fiction, science, and Indian mythology.</textarea>
+                    </div>
+
+                    <div class="profile-form-grid" style="margin-top: 1.25rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="profile-genre-select">Preferred Genre</label>
+                            <select class="form-control" id="profile-genre-select" style="padding: 0.75rem;">
+                                <option value="Mythology" selected>Mythology</option>
+                                <option value="Science">Science</option>
+                                <option value="Fantasy">Fantasy</option>
+                                <option value="Productivity">Productivity</option>
+                                <option value="Biography">Biography</option>
+                                <option value="Fiction">Fiction</option>
+                                <option value="Philosophy">Philosophy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="profile-lang-select">Display Language</label>
+                            <select class="form-control" id="profile-lang-select" style="padding: 0.75rem;">
+                                <option value="en" selected>English (IN)</option>
+                                <option value="hi">Hindi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+                            Save Changes <i class="fas fa-save" style="margin-left: 0.5rem;"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Core App JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // Authentication Guard
+        if (localStorage.getItem('bookvault_logged_in') !== 'true') {
+            window.location.replace('login.html');
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookVault | Library</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar glass" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-book-open"></i> BookVault
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item"><a href="index.html"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="library.html" class="active"><i class="fas fa-bookmark"></i> My Library</a></li>
+            <li class="nav-item"><a href="profile.html"><i class="fas fa-user-circle"></i> My Profile</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                <button class="icon-btn menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search by title or author...">
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+                <button class="icon-btn" id="theme-toggle"><i class="fas fa-moon"></i></button>
+                <button class="btn btn-primary" id="add-book-btn"><i class="fas fa-plus"></i> Add Book</button>
+                <a href="profile.html" class="profile-widget" id="profile-widget" style="text-decoration: none;">
+                    <img src="images/user_avatar.png" alt="Aarav Sharma" class="profile-avatar">
+                    <div class="profile-details">
+                        <span class="profile-name">Aarav Sharma</span>
+                        <span class="profile-role">Premium Member</span>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <!-- Library Controls -->
+        <div class="library-controls">
+            <div class="genre-filters" id="genre-filters">
+                <span class="filter-badge active" data-genre="All">All</span>
+                <span class="filter-badge" data-genre="Mythology">Mythology</span>
+                <span class="filter-badge" data-genre="Fantasy">Fantasy</span>
+                <span class="filter-badge" data-genre="Fiction">Fiction</span>
+                <span class="filter-badge" data-genre="Non-Fiction">Non-Fiction</span>
+                <span class="filter-badge" data-genre="Mystery">Mystery</span>
+                <span class="filter-badge" data-genre="Science">Science</span>
+                <span class="filter-badge" data-genre="Productivity">Productivity</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <select class="form-control" id="sort-select" style="width: auto; padding: 0.4rem 1rem;">
+                    <option value="recent">Recently Added</option>
+                    <option value="rating-high">Highest Rated</option>
+                    <option value="rating-low">Lowest Rated</option>
+                </select>
+                <select class="form-control" id="status-filter" style="width: auto; padding: 0.4rem 1rem;">
+                    <option value="All">All Status</option>
+                    <option value="Currently Reading">Currently Reading</option>
+                    <option value="Completed">Completed</option>
+                    <option value="To Read">To Read</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Book Grid -->
+        <div class="book-grid" id="book-grid">
+            <!-- Rendered by JS -->
+        </div>
+    </main>
+
+    <!-- Add/Edit Book Modal -->
+    <div class="modal-overlay" id="book-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Book</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <form id="book-form">
+                <input type="hidden" id="book-id">
+                
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" id="book-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Author</label>
+                    <input type="text" class="form-control" id="book-author" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Genre</label>
+                        <select class="form-control" id="book-genre" required>
+                            <option value="Mythology">Mythology</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Science">Science</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Psychology">Psychology</option>
+                            <option value="Philosophy">Philosophy</option>
+                            <option value="Productivity">Productivity</option>
+                            <option value="Self Help">Self Help</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-control" id="book-status">
+                            <option value="To Read">To Read</option>
+                            <option value="Currently Reading">Currently Reading</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Total Pages (Optional for progress)</label>
+                    <input type="number" class="form-control" id="book-total-pages" min="1">
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-outline" id="cancel-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Book Details / Reading Tracker Modal -->
+    <div class="modal-overlay" id="details-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="details-title">Book Details</h2>
+                <button class="close-modal" id="close-details-modal">&times;</button>
+            </div>
+            
+            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="book-cover" style="width: 120px; height: 160px; font-size: 2rem; margin: 0;" id="details-cover">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h3 id="details-book-title" style="margin-bottom: 0.25rem;">Title</h3>
+                    <p id="details-book-author" style="color: var(--text-secondary); margin-bottom: 1rem;">Author</p>
+                    
+                    <!-- Progress Section -->
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                            <span>Progress</span>
+                            <span id="details-progress-text">0%</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="details-progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="number" id="details-pages-read" class="form-control" style="width: 80px; padding: 0.3rem;" min="0">
+                            <span style="font-size: 0.875rem;">/ <span id="details-total-pages">0</span> pages</span>
+                            <button class="btn btn-primary" id="update-progress-btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Update</button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Star Rating -->
+                    <div>
+                        <span style="font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Your Rating</span>
+                        <div class="star-rating" id="details-stars" style="font-size: 1.25rem; cursor: pointer;">
+                            <i class="far fa-star" data-val="1"></i>
+                            <i class="far fa-star" data-val="2"></i>
+                            <i class="far fa-star" data-val="3"></i>
+                            <i class="far fa-star" data-val="4"></i>
+                            <i class="far fa-star" data-val="5"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reading Checklist Tracker -->
+            <div style="background: rgba(0,0,0,0.05); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+                <h4 style="margin-bottom: 0.75rem;">Reading Checklist</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" class="tracker-check" value="Started"> Started
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" class="tracker-check" value="Currently Reading"> Currently Reading
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" class="tracker-check" value="Completed"> Completed
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" class="tracker-check" value="Revision Done"> Revision Done
+                    </label>
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="form-group">
+                <label class="form-label">Notes & Key Takeaways</label>
+                <textarea class="form-control" id="details-notes" rows="4" placeholder="Write summaries, favorite quotes..."></textarea>
+                <button class="btn btn-outline" id="save-notes-btn" style="margin-top: 0.5rem; width: 100%; justify-content: center;">Save Notes</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
